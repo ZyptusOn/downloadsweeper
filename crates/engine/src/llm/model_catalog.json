@@ -1,0 +1,469 @@
+{
+  "verified_at": "2026-09-05",
+  "providers": [
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "endpoint": "https://api.deepseek.com",
+      "api_format": "chat_completions",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/"
+    },
+    {
+      "id": "glm",
+      "name": "智谱 GLM",
+      "endpoint": "https://open.bigmodel.cn/api/paas/v4",
+      "api_format": "chat_completions",
+      "source": "https://docs.bigmodel.cn/cn/guide/start/model-overview"
+    },
+    {
+      "id": "mimo",
+      "name": "小米 MiMo",
+      "endpoint": "https://api.xiaomimimo.com/v1",
+      "api_format": "chat_completions",
+      "source": "https://mimo.mi.com/docs/en-US/quick-start/model"
+    },
+    {
+      "id": "longcat",
+      "name": "美团 LongCat",
+      "endpoint": "https://api.longcat.chat/openai/v1",
+      "api_format": "chat_completions",
+      "source": "https://longcat.chat/platform/docs/zh/"
+    },
+    {
+      "id": "hunyuan",
+      "name": "腾讯混元 · TokenHub",
+      "endpoint": "https://tokenhub.tencentmaas.com/v1",
+      "api_format": "chat_completions",
+      "source": "https://intl.cloud.tencent.com/zh/document/product/1300/80695"
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "endpoint": "https://api.openai.com/v1",
+      "api_format": "auto",
+      "source": "https://developers.openai.com/api/docs/models/compare"
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic Claude",
+      "endpoint": "https://api.anthropic.com/v1",
+      "api_format": "anthropic",
+      "source": "https://platform.claude.com/docs/en/models/overview"
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-flash",
+      "provider": "deepseek",
+      "context_length": 1000000,
+      "max_output_tokens": 384000,
+      "vision": false,
+      "tools": true,
+      "note": "",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "provider": "deepseek",
+      "context_length": 1000000,
+      "max_output_tokens": 384000,
+      "vision": false,
+      "tools": true,
+      "note": "",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/"
+    },
+    {
+      "id": "deepseek-v4-flash-vision-exp",
+      "provider": "deepseek",
+      "context_length": 1000000,
+      "max_output_tokens": 384000,
+      "vision": true,
+      "tools": true,
+      "note": "实验视觉模型；可用性以账号列表为准",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/"
+    },
+    {
+      "id": "glm-5",
+      "provider": "glm",
+      "context_length": 200000,
+      "max_output_tokens": 128000,
+      "vision": false,
+      "tools": true,
+      "note": "",
+      "source": "https://docs.bigmodel.cn/cn/guide/start/model-overview"
+    },
+    {
+      "id": "glm-5.1",
+      "provider": "glm",
+      "context_length": 200000,
+      "max_output_tokens": 128000,
+      "vision": false,
+      "tools": true,
+      "note": "",
+      "source": "https://docs.bigmodel.cn/cn/guide/start/model-overview"
+    },
+    {
+      "id": "glm-5-turbo",
+      "provider": "glm",
+      "context_length": 200000,
+      "max_output_tokens": 128000,
+      "vision": false,
+      "tools": true,
+      "note": "",
+      "source": "https://docs.bigmodel.cn/cn/guide/start/model-overview"
+    },
+    {
+      "id": "glm-5.2",
+      "provider": "glm",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": false,
+      "tools": true,
+      "note": "",
+      "source": "https://docs.bigmodel.cn/cn/guide/start/model-overview"
+    },
+    {
+      "id": "glm-5.3",
+      "provider": "glm",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": false,
+      "tools": true,
+      "note": "",
+      "source": "https://docs.bigmodel.cn/cn/guide/start/model-overview"
+    },
+    {
+      "id": "glm-5.3-flash",
+      "provider": "glm",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://docs.bigmodel.cn/cn/guide/start/model-overview"
+    },
+    {
+      "id": "mimo-v2.5-pro",
+      "provider": "mimo",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": false,
+      "tools": true,
+      "note": "",
+      "source": "https://mimo.mi.com/docs/en-US/quick-start/model"
+    },
+    {
+      "id": "mimo-v2.5",
+      "provider": "mimo",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://mimo.mi.com/docs/en-US/quick-start/model"
+    },
+    {
+      "id": "LongCat-2.0",
+      "provider": "longcat",
+      "context_length": 1000000,
+      "max_output_tokens": 131072,
+      "vision": false,
+      "tools": true,
+      "note": "",
+      "source": "https://longcat.chat/platform/docs/zh/"
+    },
+    {
+      "id": "hy4-preview",
+      "provider": "hunyuan",
+      "context_length": 1000000,
+      "max_output_tokens": 64000,
+      "vision": null,
+      "tools": true,
+      "note": "TokenHub 新接口；视觉能力以服务端为准",
+      "source": "https://cloud.tencent.com/document/product/1823/130051",
+      "max_input_tokens": 960000
+    },
+    {
+      "id": "hy3",
+      "provider": "hunyuan",
+      "context_length": 256000,
+      "max_output_tokens": 128000,
+      "vision": false,
+      "tools": true,
+      "note": "最大输入 192K；总上下文 256K。以当前账号接口为准。",
+      "source": "https://cloud.tencent.com/document/product/1823/130051",
+      "max_input_tokens": 192000
+    },
+    {
+      "id": "hy3-preview",
+      "provider": "hunyuan",
+      "context_length": 256000,
+      "max_output_tokens": 128000,
+      "vision": false,
+      "tools": true,
+      "note": "最大输入 192K；总上下文 256K。以当前账号接口为准。",
+      "source": "https://cloud.tencent.com/document/product/1823/130051",
+      "max_input_tokens": 192000
+    },
+    {
+      "id": "hunyuan-turbos-latest",
+      "provider": "hunyuan",
+      "context_length": null,
+      "max_output_tokens": null,
+      "vision": null,
+      "tools": true,
+      "note": "不同平台/版本限制可能不同，请采用服务端能力或手动填写",
+      "source": "https://intl.cloud.tencent.com/zh/document/product/1300/80695"
+    },
+    {
+      "id": "hunyuan-t1-latest",
+      "provider": "hunyuan",
+      "context_length": null,
+      "max_output_tokens": null,
+      "vision": null,
+      "tools": true,
+      "note": "不同平台/版本限制可能不同，请采用服务端能力或手动填写",
+      "source": "https://intl.cloud.tencent.com/zh/document/product/1300/80695"
+    },
+    {
+      "id": "gpt-5",
+      "provider": "openai",
+      "context_length": 400000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5"
+    },
+    {
+      "id": "gpt-5-mini",
+      "provider": "openai",
+      "context_length": 400000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5-mini"
+    },
+    {
+      "id": "gpt-5-nano",
+      "provider": "openai",
+      "context_length": 400000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5-nano"
+    },
+    {
+      "id": "gpt-5.1",
+      "provider": "openai",
+      "context_length": 400000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.1"
+    },
+    {
+      "id": "gpt-5.2",
+      "provider": "openai",
+      "context_length": 400000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.2"
+    },
+    {
+      "id": "gpt-5.4-mini",
+      "provider": "openai",
+      "context_length": 400000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini"
+    },
+    {
+      "id": "gpt-5.4-nano",
+      "provider": "openai",
+      "context_length": 400000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.4-nano"
+    },
+    {
+      "id": "gpt-5.4",
+      "provider": "openai",
+      "context_length": 1050000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "官方 OpenAI 自动使用 Responses；后续未知版本不推测能力",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.4"
+    },
+    {
+      "id": "gpt-5.5",
+      "provider": "openai",
+      "context_length": 1050000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "官方 OpenAI 自动使用 Responses；后续未知版本不推测能力",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.5"
+    },
+    {
+      "id": "gpt-5.6-sol",
+      "provider": "openai",
+      "context_length": 1050000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "官方 OpenAI 自动使用 Responses；后续未知版本不推测能力",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol"
+    },
+    {
+      "id": "gpt-5.6-terra",
+      "provider": "openai",
+      "context_length": 1050000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "官方 OpenAI 自动使用 Responses；后续未知版本不推测能力",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-terra"
+    },
+    {
+      "id": "gpt-5.6-luna",
+      "provider": "openai",
+      "context_length": 1050000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "官方 OpenAI 自动使用 Responses；后续未知版本不推测能力",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-luna"
+    },
+    {
+      "id": "gpt-6-astra",
+      "provider": "openai",
+      "context_length": 1050000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "官方 OpenAI 自动使用 Responses；后续未知版本不推测能力",
+      "source": "https://developers.openai.com/api/docs/models/gpt-6-astra"
+    },
+    {
+      "id": "claude-opus-4-6",
+      "provider": "anthropic",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/overview"
+    },
+    {
+      "id": "claude-opus-4-7",
+      "provider": "anthropic",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/overview"
+    },
+    {
+      "id": "claude-opus-4-8",
+      "provider": "anthropic",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/overview"
+    },
+    {
+      "id": "claude-opus-5",
+      "provider": "anthropic",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/overview"
+    },
+    {
+      "id": "claude-sonnet-5",
+      "provider": "anthropic",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/overview"
+    },
+    {
+      "id": "claude-fable-5",
+      "provider": "anthropic",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/overview"
+    },
+    {
+      "id": "claude-fable-5-1",
+      "provider": "anthropic",
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/overview"
+    },
+    {
+      "id": "claude-sonnet-4-6",
+      "provider": "anthropic",
+      "context_length": 1000000,
+      "max_output_tokens": 64000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/overview"
+    },
+    {
+      "id": "claude-opus-4-5",
+      "provider": "anthropic",
+      "context_length": 200000,
+      "max_output_tokens": 64000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/opus-4-5/overview"
+    },
+    {
+      "id": "claude-sonnet-4-5",
+      "provider": "anthropic",
+      "context_length": 200000,
+      "max_output_tokens": 64000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/sonnet-4-5/overview"
+    },
+    {
+      "id": "claude-haiku-4-5",
+      "provider": "anthropic",
+      "context_length": 200000,
+      "max_output_tokens": 64000,
+      "vision": true,
+      "tools": true,
+      "note": "",
+      "source": "https://platform.claude.com/docs/en/models/overview"
+    }
+  ]
+}

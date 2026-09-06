@@ -1,0 +1,40 @@
+[workspace]
+resolver = "2"
+members = ["crates/engine", "crates/cli", "crates/web", "src-tauri"]
+default-members = ["crates/engine", "crates/cli", "crates/web"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["DownloadSweeper"]
+license = "MIT"
+
+[workspace.dependencies]
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "fs", "sync", "io-util", "net", "time", "signal", "process"] }
+tokio-util = { version = "0.7", features = ["rt"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+thiserror = "1"
+uuid = { version = "1", features = ["v4", "serde"] }
+sha2 = "0.10"
+walkdir = "2"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "stream"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+chrono = { version = "0.4", features = ["serde"] }
+async-trait = "0.1"
+futures = "0.3"
+toml = "0.8"
+trash = "5"
+tauri = { version = "2", features = [] }
+tauri-build = { version = "2", features = [] }
+
+# Distribution builds: optimize size without changing panic recovery behavior.
+[profile.release]
+opt-level = "s"
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
+debug = 0
+incremental = false

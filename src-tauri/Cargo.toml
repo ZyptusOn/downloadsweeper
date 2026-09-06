@@ -1,0 +1,12 @@
+[package]
+name = "ds-tauri"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+ds-web = { path = "../crates/web" }
+tauri = { workspace = true }

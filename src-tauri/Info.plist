@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>NSDownloadsFolderUsageDescription</key>
+  <string>扫描您选择的下载目录，在您授权读取并审查计划后整理文件。</string>
+  <key>NSDocumentsFolderUsageDescription</key>
+  <string>仅在您选择文稿目录并授权后读取内容，审查计划后才移动文件。</string>
+  <key>NSDesktopFolderUsageDescription</key>
+  <string>仅在您选择桌面目录并授权后读取内容，审查计划后才移动文件。</string>
+</dict></plist>

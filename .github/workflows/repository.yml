@@ -1,0 +1,23 @@
+name: Repository hygiene
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  shareable-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source files and secret-check regression tests
+        run: |
+          python -B scripts/verify_share.py --project-only
+          python -B scripts/test_verify_share.py
+          python -B scripts/test_sync_workspace.py
+      - name: Check frontend syntax and graph layout
+        # Node is only a verification dependency; the application vendors its UI.
+        run: |
+          node --check frontend/app.js
+          node --check frontend/graph.js
+          node scripts/test_graph_layout.mjs

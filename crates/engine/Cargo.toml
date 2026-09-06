@@ -1,0 +1,45 @@
+[package]
+name = "ds-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+default = []
+legacy-agent = []
+
+[dependencies]
+tokio = { workspace = true }
+tokio-util = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }
+sha2 = { workspace = true }
+blake3 = "1.8.7"
+walkdir = { workspace = true }
+reqwest = { workspace = true }
+tracing = { workspace = true }
+chrono = { workspace = true }
+async-trait = { workspace = true }
+futures = { workspace = true }
+toml = { workspace = true }
+trash = { workspace = true }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+dirs = "6"
+dotenvy = "0.15"
+zip = { version = "8.6", default-features = false, features = ["deflate-flate2"] }
+flate2 = { version = "1", default-features = false, features = ["rust_backend"] }
+quick-xml = "0.41"
+
+[build-dependencies]
+cc = "1"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[target.'cfg(windows)'.dependencies]
+windows-core = "0.61"
+windows-sys = { version = "0.61", features = ["Win32_Storage_FileSystem"] }
+windows = { version = "0.61", features = ["Foundation", "Data_Pdf", "Media_Editing", "Media_MediaProperties", "Graphics_Imaging", "Storage", "Storage_Streams", "Win32_System_WinRT", "Win32_System_Com", "Win32_UI_Shell"] }

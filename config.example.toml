@@ -1,0 +1,76 @@
+# DownloadSweeper 配置示例。复制为 config.toml，或通过网页“模型与设置”修改。
+# 不填写 scan_root 时，使用系统下载目录（包括系统重定向位置）。
+# Windows 路径可用单引号避免反斜杠转义。
+# scan_root = 'D:\Downloads'
+# scan_root = '/Users/yourname/Downloads'
+token_budget = 500000 # 输入与输出合计；设为 "unlimited" 表示不限
+max_iterations = 12 # 每个分类批次的工具轮次上限（1–32）
+
+[llm]
+# 只读模型请求并行数（1–8）；真实文件操作始终串行。
+parallel_requests = 3
+api_format = "auto" # auto / chat_completions / responses / anthropic
+# 可填基础地址、/v1 地址或完整 /chat/completions 地址。
+endpoint = "https://api.openai.com/v1"
+model = "gpt-4o-mini" # 请改为服务商实际提供的模型
+context_length = 32768
+# 包含部分模型的思考 token；实际请求还受上下文剩余空间和任务预算限制。
+max_output_tokens = 16384
+request_timeout_seconds = 600
+thinking_mode = false
+multimodal = false
+temperature = 0.2
+# 显式 api_key_env 只读取指定变量；同名进程环境变量优先于 .env。
+# 不指定 api_key_env 时兼容 DS_API_KEY > OPENAI_API_KEY > 旧版 api_key。
+# 复制 .env.example 为同目录的 .env，在其中填写 DS_API_KEY；不要分享 .env。
+api_key_env = "DS_API_KEY"
+
+[llm.pricing]
+# auto 自动匹配已核实的官方价格；中转、协议价或免费服务可使用 manual。
+mode = "auto"
+# 手动模式币种：USD / CNY。旧字段名保留兼容，数值按此币种计算。
+currency = "USD"
+# 自动模式可选结算币种；不填时选服务商默认币种，不做汇率转换。
+# official_currency = "CNY"
+# 文件中按千 token，GUI 按百万 token 显示。仅 manual 模式使用下面单价。
+input_per_1k_usd = 0.0
+output_per_1k_usd = 0.0
+# 缓存单价可选；不填沿用普通输入价，0 表示免费。
+# cached_input_per_1k = 0.0
+# cache_write_per_1k = 0.0
+# cache_write_1h_per_1k = 0.0
+
+[search]
+# 可选 Tavily 兼容检索。任务中还需勾选“联网检索辅助命名”才会调用。
+# 只发送允许读取的文件名，不发送文件内容。搜索费用独立于 LLM token 费用。
+enabled = false
+endpoint = "https://api.tavily.com/search"
+# 搜索密钥使用 DS_SEARCH_API_KEY 环境变量，不在示例配置中填写。
+
+[permissions]
+default = "filename_only"
+content_slice_bytes = 4096
+
+# 第一条匹配的规则生效；扩展名为空的规则会匹配所有格式。
+# none：只做本地扩展名分类，AI 看不到文件名与内容。
+[[permissions.rules]]
+extensions = ["xlsx", "xls"]
+tier = "none"
+
+[[permissions.rules]]
+extensions = ["docx", "doc", "pdf"]
+tier = "filename_only"
+
+# 授权少量文本内容。可选 min_bytes / max_bytes 限制文件大小。
+[[permissions.rules]]
+extensions = ["txt", "md", "csv"]
+max_bytes = 5242880
+tier = "content_slice"
+
+# 如需开启视觉，在 UI 中勾选模型视觉能力，并在任务权限中授权 image/content_slice。
+# PNG/JPEG 发送缩略图；视频最多三帧拼图，Windows 优先原生解码，FFmpeg 可选后备。
+# [[permissions.rules]]
+# extensions = ["png", "jpg", "jpeg", "mp4", "mkv", "mov"]
+# tier = "image"
+
+# 文件示例已迁移到任务的节点 examples 中：通过节点“选择具体文件”设置。

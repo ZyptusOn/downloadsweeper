@@ -1,0 +1,43 @@
+name: Apple Silicon compatibility
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  macos-arm64:
+    runs-on: macos-15
+    timeout-minutes: 40
+    env:
+      MACOSX_DEPLOYMENT_TARGET: '11.0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check native toolchain
+        run: |
+          test "$(uname -m)" = arm64
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          rustup target add aarch64-apple-darwin
+          rustc -vV
+      - name: Compile and test shared runtime and desktop shell
+        run: |
+          cargo test --locked
+          cargo build --locked -p ds-web -p ds-cli
+          cargo check --locked -p ds-tauri
+          python scripts/cli_smoke.py
+          python scripts/workflow_regression.py
+          python scripts/runtime_regression.py
+          python scripts/model_connection_regression.py
+          python scripts/media_regression.py
+          python scripts/pdf_preview_regression.py
+          python scripts/workflow_regression.py pdf_agent_regression.py
+      - name: Test native extraction and FFmpeg fallback with synthetic videos
+        run: |
+          brew list ffmpeg >/dev/null 2>&1 || brew install ffmpeg
+          export DS_TEST_MEDIA_BIN="$(brew --prefix ffmpeg)/bin"
+          python scripts/media_regression.py --native-only
+          python scripts/media_regression.py --ffmpeg-fallback
+          python scripts/native_preview_regression.py
+      - name: Verify portable package
+        run: python scripts/package_macos.py --include-cli

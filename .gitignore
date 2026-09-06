@@ -1,0 +1,41 @@
+# Reproducible build output and release packages
+/target/
+/dist/
+/src-tauri/gen/
+
+# Private settings and local task/history data
+config.toml
+.env
+.env.*
+!.env.example
+.ds-data/
+/artifacts/
+trajectory.jsonl
+session-*.json
+plans/
+classification_cache.json
+dir_class_overrides.json
+*.log
+
+# Language/tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+node_modules/
+
+# OS metadata and temporary editor files
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+/%SystemDrive%/
+# Build-copy ownership marker (the source repository must not contain one).
+.ds-workspace.json
+.sync-*
