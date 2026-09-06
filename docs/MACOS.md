@@ -36,19 +36,17 @@ Unix 内容读取逐层使用 openat/O_NOFOLLOW，并在 Mac 用 F_GETPATH 检�
 cargo test --locked
 cargo build --locked -p ds-web -p ds-cli
 cargo check --locked -p ds-tauri
-python3 scripts/cli_smoke.py
-python3 scripts/workflow_regression.py
-python3 scripts/runtime_regression.py
-python3 scripts/model_connection_regression.py
+cargo test --locked -p ds-cli
+cargo test --locked -p ds-web --tests
+cargo test --locked -p ds-web --test runtime
+cargo test --locked -p ds-web --test model_connections
 ```
 
-原生抽帧测试需要 FFmpeg **仅用于生成合成视频**，不调用真实模型：
+默认 `cargo test` 直接使用仓库内的合成 H.264 视频和 Rust 生成的 PDF，验证原生抽帧及页面渲染，无需 FFmpeg，不调用真实模型。只有可选后备测试需要 FFmpeg 生成 FFV1 视频：
 
 ```sh
 export DS_TEST_MEDIA_BIN="$(brew --prefix ffmpeg)/bin"
-python3 scripts/media_regression.py --native-only
-python3 scripts/media_regression.py --ffmpeg-fallback
-python3 scripts/native_preview_regression.py
+cargo test --locked -p ds-web --test media ffmpeg_fallback_protocols -- --ignored
 ```
 
 `.github/workflows/apple-silicon.yml` 在 macos-15 ARM runner 上执行这些检查；上传到 GitHub 后才会运行。当前没有已通过的远端运行记录。

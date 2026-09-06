@@ -11,7 +11,7 @@ def main():
     if sys.platform != 'darwin' or platform.machine() != 'arm64':
         parser.error('Run this script on an Apple Silicon Mac using an arm64 Python/Rust toolchain.')
     def run(*command): subprocess.run(command, cwd=ROOT, check=True)
-    run(sys.executable, 'scripts/verify_share.py', '--project-only')
+    run('cargo', 'run', '--locked', '-p', 'ds-dev', '--', 'verify-share', '--project-only')
     target = 'aarch64-apple-darwin'
     command = ['cargo', 'build', '--release', '--locked', '--target', target, '-p', 'ds-web']
     if args.include_cli: command += ['-p', 'ds-cli']
@@ -32,12 +32,12 @@ def main():
     launcher = folder/'Start.command'
     launcher.write_text('#!/bin/sh\nset -eu\ncd "$(dirname "$0")"\nexec ./ds-web --open "$@"\n', encoding='utf-8')
     launcher.chmod(0o755)
-    run(sys.executable, 'scripts/verify_share.py', '--package', str(folder))
+    run('cargo', 'run', '--locked', '-p', 'ds-dev', '--', 'verify-share', '--package', str(folder))
     archive = Path(str(folder) + '.zip')
     with zipfile.ZipFile(archive, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as package:
         for file in sorted(folder.iterdir()):
             package.write(file, str(Path(name)/file.name))
-    run(sys.executable, 'scripts/verify_share.py', '--package', str(archive))
+    run('cargo', 'run', '--locked', '-p', 'ds-dev', '--', 'verify-share', '--package', str(archive))
     with zipfile.ZipFile(archive) as package:
         for executable in ['Start.command','ds-web'] + (['ds'] if args.include_cli else []):
             entry = package.getinfo(f'{name}/{executable}')

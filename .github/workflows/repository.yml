@@ -1,23 +1,22 @@
-name: Repository hygiene
+name: Rust tests and repository hygiene
 on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
 jobs:
-  shareable-source:
-    runs-on: ubuntu-latest
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Verify source files and secret-check regression tests
+      - name: Install Rust
         run: |
-          python -B scripts/verify_share.py --project-only
-          python -B scripts/test_verify_share.py
-          python -B scripts/test_sync_workspace.py
-      - name: Check frontend syntax and graph layout
-        # Node is only a verification dependency; the application vendors its UI.
-        run: |
-          node --check frontend/app.js
-          node --check frontend/graph.js
-          node scripts/test_graph_layout.mjs
+          rustup toolchain install stable --profile minimal --component rustfmt
+          rustup default stable
+      - name: Verify source and index
+        run: cargo run --locked -p ds-dev -- verify-share --project-only
+      - name: Run Rust unit, HTTP, CLI, native and frontend tests
+        run: cargo test --locked --no-fail-fast

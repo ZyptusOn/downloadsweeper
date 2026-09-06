@@ -10,7 +10,7 @@ Windows 使用 Windows.Data.Pdf，macOS 使用 CoreGraphics，从已有的安全
 
 PDF 已接入目录建议、分类证据工具与文件名重生。工具提示会区分 pdf_pages 与 video_frames；仅在名称信息不足且权限允许时使用，不为了预览而额外增加独立模型请求。Windows 已用真实合成 PDF 和三种模拟 API 协议验收；macOS 代码加入 Apple Silicon CI，仍需实机验证。
 
-接口依据：[Windows PDF 页渲染](https://learn.microsoft.com/en-us/uwp/api/windows.data.pdf.pdfpage.rendertostreamasync)、[CoreGraphics PDF 绘制](https://developer.apple.com/library/archive/documentation/GraphicsImaging/Conceptual/drawingwithquartz2d/dq_pdf/dq_pdf.html)。验证：`python scripts/pdf_preview_regression.py`、`python scripts/workflow_regression.py pdf_agent_regression.py`。
+接口依据：[Windows PDF 页渲染](https://learn.microsoft.com/en-us/uwp/api/windows.data.pdf.pdfpage.rendertostreamasync)、[CoreGraphics PDF 绘制](https://developer.apple.com/library/archive/documentation/GraphicsImaging/Conceptual/drawingwithquartz2d/dq_pdf/dq_pdf.html)。验证：`cargo test --locked -p ds-web --test media native_pdf_progressive_ipc_unicode_dedup_snapshot_and_bounds`、`cargo test --locked -p ds-web --test media pdf_agent_tool_evidence_mapping_and_permission_gates`。
 
 ## 视频
 
@@ -46,4 +46,4 @@ Word 采样 document.xml；幻灯片采样前三个编号正文部件；Excel �
 
 本地有 3 个受限预览工作位，文本和 Office 读取、图片缩放放在阻塞工作线程，避免占用异步运行时。一个证据工具调用中的独立文件可并行读取。API 请求继续由统一并发上限（1–8，默认 3）管理，现有分类批次、类型摘要顺序及检查点保留，不为了填满并发拆小任务，不重复付费请求，不自动重试。
 
-验证：`cargo test -p ds-engine --test evidence --locked`、`cargo test -p ds-engine --lib --locked`、`python scripts/media_regression.py`、`python scripts/runtime_regression.py`。真实视频测试将 `DS_TEST_MEDIA_BIN` 指向含 ffmpeg.exe/ffprobe.exe 的目录；`python scripts/media_regression.py --native-only` 仅用 FFmpeg 生成合成视频，随后从服务器 PATH 排除它并断言实际后端为 windows_media 或 avfoundation；Mac 上 Homebrew 后备仍可能被发现，测试通过实际后端断言确认未使用后备。`--ffmpeg-fallback` 使用系统不支持的 FFV1 合成视频验证后备路径。均不调用真实 LLM。
+验证：`cargo test -p ds-engine --test evidence --locked`、`cargo test -p ds-engine --lib --locked`、`cargo test --locked -p ds-web --test media`、`cargo test --locked -p ds-web --test runtime`。原生测试直接使用仓库内合成 H.264 视频，从服务器 PATH 排除外部解码工具，并断言实际后端为 windows_media 或 avfoundation；Mac 的 Homebrew 后备仍可能被发现，实际后端断言确保没有使用它。可选后备测试将 `DS_TEST_MEDIA_BIN` 指向 FFmpeg 目录，再运行 `cargo test --locked -p ds-web --test media ffmpeg_fallback_protocols -- --ignored`，以系统不支持的 FFV1 合成视频验证后备。所有测试由 Rust 执行，均不调用真实 LLM。

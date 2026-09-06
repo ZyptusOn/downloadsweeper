@@ -58,11 +58,11 @@ Windows 使用 IFileOperation 的回收标志与系统回收站条目标识；ma
 ```text
 cargo test --workspace --exclude ds-tauri --locked
 cargo build -p ds-web -p ds-cli --locked
-python scripts/archive_cleanup_regression.py
-python scripts/workflow_regression.py desktop_regression.py desktop_agent_regression.py
-python scripts/cli_smoke.py
-python scripts/workflow_regression.py
-python scripts/runtime_regression.py
+cargo test --locked -p ds-web --test archives
+cargo test --locked -p ds-web --test desktop
+cargo test --locked -p ds-cli
+cargo test --locked -p ds-web --tests
+cargo test --locked -p ds-web --test runtime
 ```
 
 归档回归验证完整往返、损坏拒绝、原目录缺失时只读查看、安全续用和运行中导出拒绝；记忆回归验证超过 8 条历史、容量截取及场景隔离；清理回归验证类别、整体保护、权限、分批和文件哈希不变。测试使用合成文件和本地模拟服务，不调用真实付费模型。

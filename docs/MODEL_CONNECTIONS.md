@@ -26,6 +26,6 @@
 
 模型发现不发送生成请求；“测试已保存的连接”会发送一条简短生成请求，并记录实际 usage。工具轮次会保留供应商要求的续接数据；输入估算包含这些数据，但不会把估算当成实测 token。Claude 输入 usage 计数包含普通输入、缓存写入与缓存读取，计费时分别计算，避免重复收费。默认匹配已核实的官方价目表，也可切换手动单价与币种。详细价格依据、档位与限制见 `PRICING.md`；结果是模型费用估算，不是供应商账单。
 
-发布前运行 `python scripts/verify_share.py`。本机 `.env` 不可分享。协议回归使用本地模拟服务：`cargo test --workspace --exclude ds-tauri --locked`、`cargo build -p ds-web --locked`、`python scripts/model_connection_regression.py`。覆盖列表元数据、未知模型、鉴权、分页、错误脱敏、重定向隔离、跨端点密钥隔离、三种协议的实际 HTTP 请求与用量解析；不代表每个账号都已通过实网生成验证。
+发布前运行 `cargo run --locked -p ds-dev -- verify-share`。本机 `.env` 不可分享。协议回归使用本地模拟服务：`cargo test --workspace --exclude ds-tauri --locked`、`cargo build -p ds-web --locked`、`cargo test --locked -p ds-web --test model_connections`。覆盖列表元数据、未知模型、鉴权、分页、错误脱敏、重定向隔离、跨端点密钥隔离、三种协议的实际 HTTP 请求与用量解析；不代表每个账号都已通过实网生成验证。
 
-所有工作流生成请求通过统一运行时，共用连接池、并行额度与任务预算预留。可在设置中调整并行请求数（默认 3，范围 1–8）和分类工具轮次（默认 12，范围 1–32）；独立批次利用配置的上下文扩容。未确认用量单独显示并保留预留，详细行为见 `AGENT_RUNTIME.md`；本地验证为 `python scripts/runtime_regression.py`。
+所有工作流生成请求通过统一运行时，共用连接池、并行额度与任务预算预留。可在设置中调整并行请求数（默认 3，范围 1–8）和分类工具轮次（默认 12，范围 1–32）；独立批次利用配置的上下文扩容。未确认用量单独显示并保留预留，详细行为见 `AGENT_RUNTIME.md`；本地验证为 `cargo test --locked -p ds-web --test runtime`。

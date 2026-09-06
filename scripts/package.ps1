@@ -10,8 +10,8 @@ if (Test-Path -LiteralPath (Join-Path $toolchainBin 'cargo.exe')) {
 
 Push-Location -LiteralPath $projectRoot
 try {
-    & python scripts/verify_share.py --project-only
-    if ($LASTEXITCODE -ne 0) { throw 'Share verification failed; no package was created. Python 3.11+ is required.' }
+    & cargo run --locked -p ds-dev -- verify-share --project-only
+    if ($LASTEXITCODE -ne 0) { throw 'Share verification failed; no package was created.' }
     $metadataText = & cargo metadata --locked --no-deps --format-version 1
     if ($LASTEXITCODE -ne 0) { throw 'Cannot read Cargo metadata.' }
     $metadata = $metadataText | ConvertFrom-Json
@@ -76,10 +76,10 @@ exit /b %DS_EXIT_CODE%
     [System.IO.File]::WriteAllText((Join-Path $destination 'Start.cmd'), $launcher.Replace("`r`n", "`n").Replace("`n", "`r`n"), [System.Text.Encoding]::ASCII)
 
     $archive = "$destination.zip"
-    & python scripts/verify_share.py --package $destination
+    & cargo run --locked -p ds-dev -- verify-share --package $destination
     if ($LASTEXITCODE -ne 0) { throw 'Portable directory failed credential verification; no ZIP was created.' }
     Compress-Archive -LiteralPath $destination -DestinationPath $archive -CompressionLevel Optimal
-    & python scripts/verify_share.py --package $archive
+    & cargo run --locked -p ds-dev -- verify-share --package $archive
     if ($LASTEXITCODE -ne 0) { throw 'Portable ZIP failed credential verification; do not share it.' }
     $files = Get-ChildItem -LiteralPath $destination -File
     $manifest = [ordered]@{

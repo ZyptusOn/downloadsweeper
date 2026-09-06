@@ -12,7 +12,7 @@ import subprocess
 import threading
 import time
 import uuid
-from mock_llm import Mock
+from demo_model import Mock
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -21,8 +21,8 @@ class DemoMock(Mock):
     def do_GET(self):
         if self.path.rstrip('/') == '/v1/models':
             self.respond(json.dumps({'object': 'list', 'data': [
-                {'id': 'parallel-progress-fixture', 'object': 'model', 'context_length': 128000},
-                {'id': 'classification-evidence-fixture', 'object': 'model', 'context_length': 128000},
+                {'id': 'demo-batch', 'object': 'model', 'context_length': 128000},
+                {'id': 'demo-evidence', 'object': 'model', 'context_length': 128000},
             ]}).encode())
         else:
             self.send_error(404)
@@ -40,7 +40,7 @@ def main():
     mock.daemon_threads = True
     endpoint = f'http://127.0.0.1:{mock.server_port}/v1'
     config = runtime / 'config.toml'
-    config.write_text('token_budget = 500000\n[llm]\nendpoint = ' + json.dumps(endpoint) + '\nmodel = "parallel-progress-fixture"\napi_key_env = "DS_DEMO_EMPTY"\ncontext_length = 128000\nmax_output_tokens = 8192\nparallel_requests = 3\nmultimodal = true\n[permissions]\ndefault = "filename_only"\ncontent_slice_bytes = 4096\n', encoding='utf-8')
+    config.write_text('token_budget = 500000\n[llm]\nendpoint = ' + json.dumps(endpoint) + '\nmodel = "demo-batch"\napi_key_env = "DS_DEMO_EMPTY"\ncontext_length = 128000\nmax_output_tokens = 8192\nparallel_requests = 3\nmultimodal = true\n[permissions]\ndefault = "filename_only"\ncontent_slice_bytes = 4096\n', encoding='utf-8')
     env = {k: v for k, v in os.environ.items() if 'API_KEY' not in k and not k.startswith('DS_MODEL_KEY_') and k not in ('DS_DEMO_EMPTY', 'DS_CONFIG', 'DS_DATA_DIR')}
     os.chdir(runtime)
     threading.Thread(target=mock.serve_forever, daemon=True).start()

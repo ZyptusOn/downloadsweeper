@@ -17,7 +17,7 @@ import time
 import wave
 import zipfile
 import zlib
-from pdf_fixture import pdf_bytes
+from demo_pdf import pdf_bytes
 
 ROOT = Path(__file__).resolve().parents[1]
 

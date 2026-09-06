@@ -23,8 +23,8 @@
 
 | 平台 | 依赖 |
 | --- | --- |
-| Windows | stable Rust（MSVC）、Visual Studio Build Tools 的“使用 C++ 的桌面开发”及 Windows SDK |
-| macOS / Apple Silicon | stable Rust（原生 arm64）、Xcode Command Line Tools |
+| Windows | stable Rust（MSVC）、Visual Studio Build Tools 的“使用 C++ 的桌面开发”及 Windows SDK（注：需要纯Rust以外的部分是因为需要调用 Windows 原生端口进行视频帧提取和PDF页面提取） |
+| macOS / Apple Silicon | stable Rust（原生 arm64）、Xcode Command Line Tools（注：需要纯Rust以外的部分是因为需要调用 macOS 原生端口进行视频帧提取和PDF页面提取） |
 
 在项目根目录运行：
 
@@ -108,10 +108,11 @@ python -B scripts/create_trial.py
 | `crates/cli/` | Rust | 可选命令行入口，共用引擎 |
 | `src-tauri/` | Rust、Tauri 2 | 可选桌面壳，共用 Web 后端 |
 | 引擎中的 `*.m` | Objective-C、AVFoundation、CoreGraphics、Foundation | macOS 视频/PDF/废纸篓薄适配，由 Rust 调度；Windows 原生能力直接通过 Rust 调用 WinRT/COM |
-| `scripts/` | Python、PowerShell、Shell、JavaScript | 试用数据、测试、同步与打包，不承担产品运行时业务主控 |
+| `crates/*/tests/`、`crates/dev/` | Rust、Boa（仅测试） | 自动化测试、凭据检查、维护者同步；前端测试执行实际 JavaScript |
+| `scripts/` | Python、PowerShell、Shell | 可选试用数据、演示与打包，不承担产品运行时业务主控 |
 | `docs/agent-tools/`、`*catalog.json` | Markdown、JSON | 工具说明、模型能力和价格预设 |
 
-项目覆盖 Rust 核心、GUI、自定义模型、实时进度与打断、历史归档、token 与费用统计六项要求。开发检查见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+项目覆盖 Rust 核心、GUI、自定义模型、实时进度与打断、历史归档、token 与费用统计六项要求。运行 `cargo test --locked` 执行 Rust 测试，无需 Python 或 Node.js。开发检查见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 配置与任务数据保存在本机；保留 `.ds-data` 才能继续任务和恢复操作。分享程序时使用原始发布包，不附带 `.env` 或私人任务归档。详细边界：[多模态](docs/MULTIMODAL.md) · [检查点](docs/CHECKPOINTS.md) · [归档与回收](docs/ARCHIVES_AND_CLEANUP.md) · [文件校验](docs/FINGERPRINTS.md)。
 

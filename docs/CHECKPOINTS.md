@@ -37,7 +37,7 @@ GUI 使用 `/api/jobs` 查看记录，`resume_job` 继续运行，`cancel` 暂�
 
 ```text
 cargo test -p ds-engine --test job_recovery
-python scripts/checkpoint_regression.py
+cargo test --locked -p ds-web --test checkpoints
 ```
 
 覆盖实际暂停、超过 3 秒的进度心跳、强制结束测试进程后重启、旧任务版本拒绝、校验损坏、原子输出取消、文件移动不重复、外部修改拦截、回答重放不联网且用量只记一次、未确认用量不重发，以及后台归档重启后继续可用。测试仅使用临时目录和本地模拟 API。

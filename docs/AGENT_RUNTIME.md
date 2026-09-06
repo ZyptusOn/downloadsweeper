@@ -36,12 +36,12 @@ Web 长任务的运行记录、暂停请求和恢复入口已持久化；归档�
 cargo test --workspace --exclude ds-tauri --locked
 cargo check -p ds-engine --features legacy-agent --locked
 cargo build -p ds-web --locked
-python scripts/runtime_regression.py
-python scripts/workflow_regression.py
-python scripts/model_connection_regression.py
-node scripts/test_graph_layout.mjs
-python scripts/test_verify_share.py
-python scripts/verify_share.py
+cargo test --locked -p ds-web --test runtime
+cargo test --locked -p ds-web --tests
+cargo test --locked -p ds-web --test model_connections
+cargo test --locked -p ds-web --test frontend
+cargo test --locked -p ds-dev --test share
+cargo run --locked -p ds-dev -- verify-share
 ```
 
 运行时回归使用独立临时配置和本地模拟服务，验证并发上限、上下文扩容、检查点续接、预算预留、超时持久化、拒绝释放与导入失效。协议回归覆盖 Chat Completions、Responses 和 Anthropic Messages；不代表全部服务商都已实网生成验证。便携包由 `scripts/package.ps1` 先扫描可分享源码，再扫描发布目录和 ZIP，不包含私有 `.env`、任务数据或个人配置。

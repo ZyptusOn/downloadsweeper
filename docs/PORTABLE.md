@@ -24,7 +24,7 @@ Windows 版本使用系统安装的 Microsoft Visual C++ 运行库；若启动�
 
 `.env` 与 `config.toml` 位于同一目录，属于本机明文凭据文件，不可分享。也可以从启动终端或系统环境提供 `DS_API_KEY`；已有进程环境变量优先于 `.env`。显式 `api_key_env` 只读取其指定变量，不回退到其他密钥；未指定时兼容 `DS_API_KEY`、`OPENAI_API_KEY`、旧版内联 `api_key`；可选搜索使用 `DS_SEARCH_API_KEY`。空示例适用于本地无鉴权服务。
 
-设置页的新密钥保存到私有 `.env`，`config.toml` 仅保留变量名；查询列表不保存密钥。列表不可用时会提供尚未验证权限的官方预设，未知能力需要手动填写。支持 OpenAI Chat Completions、Responses 和 Claude 原生 Messages。构建脚本会检查发布目录和 ZIP 中的凭据；请勿转发使用后包含 `.env`、个人配置或 `.ds-data` 的整个文件夹。开发者可在源码目录运行 `python scripts/verify_share.py --package <ZIP路径>` 重新验证交付物。
+设置页的新密钥保存到私有 `.env`，`config.toml` 仅保留变量名；查询列表不保存密钥。列表不可用时会提供尚未验证权限的官方预设，未知能力需要手动填写。支持 OpenAI Chat Completions、Responses 和 Claude 原生 Messages。构建脚本会检查发布目录和 ZIP 中的凭据；请勿转发使用后包含 `.env`、个人配置或 `.ds-data` 的整个文件夹。开发者可在源码目录运行 `cargo run --locked -p ds-dev -- verify-share --package <ZIP路径>` 重新验证交付物。
 
 本版对新移动使用 BLAKE3 指纹：不超过 1 MiB 的文件完整读取；超过 1 MiB 时，
 在首尾及中间三处各读取 64 KiB，共 320 KiB，并核对文件大小与修改时间。目录内部文件分别处理。

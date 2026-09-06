@@ -78,9 +78,9 @@ R4 后续实现：Web 长任务支持持久化暂停/恢复、回答重放和后
 ## 本次实际验证
 
 - 浏览器使用 `artifacts/media-regression-091e33a5` 下合成文件及本地模拟服务：首页、扫描、下一步、步骤状态、实际目录图、目录类型切换、深层折叠、自动排列、AI 展开/最大化。
-- `node scripts/test_graph_layout.mjs`：通过居中布局、节点测量、断开分支及深度/合并折叠检查。
-- `python scripts/model_connection_regression.py`：通过模型发现、鉴权隔离、私有密钥保存、三协议 HTTP、自动/手动价格、币种及历史费用检查；无远端付费请求。
-- `python scripts/verify_share.py --project-only`：通过可分享源文件检查。
-- `python scripts/verify_share.py --package dist/DownloadSweeper-0.1.0-windows-x86_64-20260905-153036-784.zip`：通过指定现有 ZIP 和可分享源码检查。此包不能作为刚加入的 Mac 实现验收证据。
+- `cargo test --locked -p ds-web --test frontend`：通过居中布局、节点测量、断开分支及深度/合并折叠检查。
+- `cargo test --locked -p ds-web --test model_connections`：通过模型发现、鉴权隔离、私有密钥保存、三协议 HTTP、自动/手动价格、币种及历史费用检查；无远端付费请求。
+- `cargo run --locked -p ds-dev -- verify-share --project-only`：通过可分享源文件检查。
+- `cargo run --locked -p ds-dev -- verify-share --package dist/DownloadSweeper-0.1.0-windows-x86_64-20260905-153036-784.zip`：通过指定现有 ZIP 和可分享源码检查。此包不能作为刚加入的 Mac 实现验收证据。
 
 本次没有重跑整个 Rust 测试集，没有修改生产实现；仅新增本对照文档。GUI 试验产生的合成任务留在隔离 artifacts 目录。

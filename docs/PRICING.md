@@ -32,4 +32,4 @@
 
 峰谷时段按本机请求发送时刻估算；服务端实际接收时刻可能跨越边界。GPT-5.4/5.5 官方说明按完整 session 应用长上下文加价，本程序使用独立无服务器保存请求，按本次完整输入判断；后续人为压缩上下文时不能据此精确还原供应商会话账单。金额不包含税费、充值赠金、协议折扣、订阅抵扣、独立联网搜索费用。官方限时优惠没有明确终止日的条目会保留说明，最终以平台结算为准。
 
-验证：`cargo test -p ds-engine --test pricing --locked`、`python scripts/model_connection_regression.py`。覆盖峰谷边界与周末、整请求分档、缓存拆分、手动零价、币种隔离、未知价格、非法参数和历史不变。
+验证：`cargo test -p ds-engine --test pricing --locked`、`cargo test --locked -p ds-web --test model_connections`。覆盖峰谷边界与周末、整请求分档、缓存拆分、手动零价、币种隔离、未知价格、非法参数和历史不变。
