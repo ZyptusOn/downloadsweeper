@@ -13,7 +13,7 @@
 
 ## 安装与运行
 
-### Windows 便携版 （[链接](https://git.tsinghua.edu.cn/rust-course/2026/agent/agent-zhupy25/-/blob/main/DownloadSweeper-0.1.0-windows-x86_64-20260906-180021-079.ZIP)）
+### Windows 便携版 （[链接](https://git.tsinghua.edu.cn/rust-course/2026/agent/agent-zhupy25/-/blob/main/DownloadSweeper-0.1.0-windows-x86_64-20260906-180021-079.zip)）
 
 解压整个 ZIP，双击 **Start.cmd**，自动打开浏览器。若提示缺少 `VCRUNTIME140.dll`，安装与包架构匹配的 Microsoft Visual C++ 运行库。
 
