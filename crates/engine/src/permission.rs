@@ -135,11 +135,6 @@ impl PermissionConfig {
         self.default
     }
 
-    /// 实际可读内容字节数：取用户请求值与硬上限的较小者。
-    pub fn clamp_slice(&self, requested: usize) -> usize {
-        requested.min(self.content_slice_bytes)
-    }
-
     /// 预设规则集：按扩展名 + 大小给出合理默认的隐私分层，可在此基础上增删改。
     pub fn default_presets() -> Vec<PermissionRule> {
         vec![
@@ -316,10 +311,5 @@ mod tests {
         );
     }
 
-    #[test]
-    fn clamp() {
-        let c = cfg();
-        assert_eq!(c.clamp_slice(10000), 2048);
-        assert_eq!(c.clamp_slice(100), 100);
-    }
+
 }

@@ -129,7 +129,7 @@ pub struct ChatOptions {
     pub thinking_mode: bool,
 }
 
-/// 单次 chat 响应（非流式；流式留作后续扩展点）。
+/// 单次完整模型响应，包含供应商用量和结束原因。
 #[derive(Debug, Clone)]
 pub struct ChatResponse {
     pub billing_metadata: serde_json::Value,

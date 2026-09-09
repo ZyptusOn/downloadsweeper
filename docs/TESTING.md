@@ -10,6 +10,23 @@ Cargo 自动构建被测试的 `ds-web` 和 `ds`。引擎单元/集成测试保�
 
 前端通过仅用于测试的 Rust ECMAScript 引擎 Boa 解析和执行实际 `frontend/*.js`，Rust 检查返回值和几何关系；没有复制一份布局算法，也不启动 Node。React DOM/浏览器视觉效果仍需人工或浏览器验收，逻辑回归不等于完整视觉测试。
 
+## 当前工作流覆盖
+
+2026-09-09 清理了无产品入口的旧 Agent、分类、命名、扫描和计划系统，移除 `legacy-agent` 特性。旧引擎集成测试 `classify.rs`、`rename.rs`、`plan.rs`、`organize.rs` 随之移除，仍适用的行为由实际工作流验证：
+
+| 行为 | 当前回归入口 |
+| --- | --- |
+| 规则先行、AI 语义分类、真实用量与已完成批次不重发 | Web `classification.rs`、`runtime.rs`、`checkpoints.rs` |
+| 重命名保留扩展名、原名不变则不产生移动、禁止外发无权限文件 | Web `workflow.rs` 的重命名回归；`runtime.rs` 覆盖失败续接 |
+| 六阶段、用户审查、计划持久化、移动与恢复、取消和冲突 | 引擎 `workflow.rs`、`job_recovery.rs`；Web `workflow.rs`、`checkpoints.rs` |
+| 整体目录保护、容器复用与分类树编辑 | 引擎及 Web `desktop.rs`、`workflow.rs`；Web `proposals.rs` |
+| 路径越界、权限过滤、内容切片上限和无覆盖移动 | 引擎 `runtime_safety.rs`、`evidence.rs`；Web `classification.rs` |
+| 回收站确认与恢复顺序 | 引擎 `recycle` 的模拟后端测试；Web `recycle.rs` 为显式原生专项 |
+
+新工作流仍保留已发布任务的 JSON、指纹和操作日志恢复兼容性；这些兼容路径继续测试。共用的 `DirClass`、`RuleType`、`Usage` 和句柄缩略图处理也予以保留。
+
+旧配置的 `few_shot` 字段仅作为历史配置摘要的兼容数据保留，不再连接旧分类器；清空或删除该序列化字段会改变检查点和回答缓存的键。`job_recovery.rs` 验证清理前后的摘要及配置保存/加载保持一致，当前分类示例仍来自目标节点的具体文件引用。
+
 ## 测试分组
 
 ```sh

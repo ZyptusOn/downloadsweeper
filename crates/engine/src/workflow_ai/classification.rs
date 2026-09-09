@@ -771,16 +771,6 @@ fn validate_checkpoint(task: &Task, batch: &Batch, saved: &ClassificationBatch) 
     Ok(())
 }
 
-pub async fn refine(
-    task: &mut Task,
-    cfg: &AppConfig,
-    store: &TaskStore,
-    cancel: &CancellationToken,
-    progress: &Progress<'_>,
-) -> Result<()> {
-    refine_with_options(task, cfg, store, RefineOptions::default(), cancel, progress).await
-}
-
 /// Review transactions keep the old graph/plan visible until every affected batch is valid.
 pub(super) async fn finish_review(
     task: &mut Task, draft: &mut Task, cfg: &AppConfig, store: &TaskStore,

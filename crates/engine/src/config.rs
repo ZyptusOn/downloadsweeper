@@ -7,8 +7,17 @@ use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 
-use crate::classify::FewShotExample;
 use crate::permission::PermissionConfig;
+
+/// Retained only for the serialized configuration digest used by existing jobs
+/// and saved responses. Active examples are concrete file references on Node.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct LegacyFileExample {
+    filename: String,
+    category: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    path: Option<String>,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppConfig {
@@ -24,13 +33,14 @@ pub struct AppConfig {
     pub scan_root: PathBuf,
     #[serde(default)]
     pub permissions: PermissionConfig,
-    /// few-shot 分类示例（用户可自定义，引导 LLM 对齐意图）。
-    #[serde(default)]
-    pub few_shot: Vec<FewShotExample>,
+    // Keep the original field order and wire name: removing even an empty array
+    // changes config_digest and invalidates paused jobs and response-cache keys.
+    #[serde(default, rename = "few_shot")]
+    compatibility_examples: Vec<LegacyFileExample>,
     /// token 预算上限（输入+输出合计），None 表示不限。
     #[serde(default = "default_token_budget", deserialize_with = "deserialize_token_budget")]
     pub token_budget: Option<u64>,
-    /// 每个分类批次的工具轮次上限；旧 Agent 兼容使用此值。
+    /// 每个分类批次的工具轮次上限。
     #[serde(default = "default_max_iter")]
     pub max_iterations: usize,
 }
@@ -378,7 +388,7 @@ impl Default for AppConfig {
                 rules: PermissionConfig::default_presets(),
                 ..PermissionConfig::default()
             },
-            few_shot: Vec::new(),
+            compatibility_examples: Vec::new(),
             token_budget: default_token_budget(),
             max_iterations: default_max_iter(),
         }

@@ -227,12 +227,12 @@ fn prompt_context_obeys_permission_and_contains_no_paths() {
         .unwrap()
         .clone();
     task.permissions.default = AccessTier::None;
-    assert!(workflow_ai::file_context(&task, &file).unwrap().is_none());
+    assert!(workflow_ai::file_context_capped(&task, &file, 65536).unwrap().is_none());
     task.permissions.default = AccessTier::FilenameOnly;
-    let v = workflow_ai::file_context(&task, &file).unwrap().unwrap();
+    let v = workflow_ai::file_context_capped(&task, &file, 65536).unwrap().unwrap();
     assert_eq!(v, json!({"name":"a.txt","extension":"txt"}));
     task.permissions.default = AccessTier::ContentSlice;
-    let v = workflow_ai::file_context(&task, &file).unwrap().unwrap();
+    let v = workflow_ai::file_context_capped(&task, &file, 65536).unwrap().unwrap();
     assert_eq!(v["text_excerpt"], "private ");
     assert!(!v.to_string().contains("Downloads"));
     task.permissions.rules = vec![PermissionRule {
@@ -242,7 +242,7 @@ fn prompt_context_obeys_permission_and_contains_no_paths() {
         min_bytes: None,
         max_bytes: None,
     }];
-    assert!(workflow_ai::file_context(&task, &file).unwrap().is_none());
+    assert!(workflow_ai::file_context_capped(&task, &file, 65536).unwrap().is_none());
 }
 #[test]
 fn no_overwrite_even_if_destination_appears_after_planning() {
@@ -503,7 +503,7 @@ fn paths_and_atomic_descendants_cannot_be_injected() {
         assert!(safe_fs::checked_path(&task.root, bad).is_err());
     }
     task.operations[0].source = "Portable/editor.exe".into();
-    assert!(safe_fs::validate_operations(&task).is_err());
+    assert!(safe_fs::validate_operations_with_cancel(&task, &CancellationToken::new(), &|_, _, _| {}).is_err());
 }
 #[test]
 fn stale_or_hidden_scene_proposals_cannot_merge() {
@@ -637,7 +637,7 @@ fn changed_file_cannot_be_sent_using_stale_privacy_size() {
         "new private content beyond the original threshold",
     )
     .unwrap();
-    assert!(workflow_ai::file_context(&task, &entry).is_err());
+    assert!(workflow_ai::file_context_capped(&task, &entry, 65536).is_err());
 }
 #[test]
 fn second_process_cannot_open_active_task_store() {

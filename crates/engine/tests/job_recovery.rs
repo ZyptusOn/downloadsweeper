@@ -12,6 +12,37 @@ use ds_engine::{
 use serde_json::json;
 use tokio_util::sync::CancellationToken;
 
+#[test]
+fn retired_pipeline_removal_preserves_existing_configuration_digests() {
+    for examples in [
+        json!([]),
+        json!([{"filename":"sample.txt","category":"文档","path":"sample.txt"}]),
+    ] {
+        let mut value = serde_json::to_value(AppConfig::default()).unwrap();
+        value["scan_root"] = json!("synthetic-root");
+        value["few_shot"] = examples;
+        let config: AppConfig = serde_json::from_value(value).unwrap();
+        let wire = serde_json::to_value(&config).unwrap();
+        // This is the pre-cleanup AppConfig wire order, used by saved job digests.
+        let legacy_wire = format!(
+            "{{\"llm\":{},\"search\":{},\"scan_root\":{},\"permissions\":{},\"few_shot\":{},\"token_budget\":{},\"max_iterations\":{}}}",
+            serde_json::to_string(&config.llm).unwrap(),
+            serde_json::to_string(&config.search).unwrap(),
+            serde_json::to_string(&config.scan_root).unwrap(),
+            serde_json::to_string(&config.permissions).unwrap(),
+            // Rebuild the original example field order explicitly as well.
+            if wire["few_shot"].as_array().unwrap().is_empty() { "[]" } else {
+                "[{\"filename\":\"sample.txt\",\"category\":\"文档\",\"path\":\"sample.txt\"}]"
+            },
+            serde_json::to_string(&config.token_budget).unwrap(), config.max_iterations,
+        );
+        let digest = blake3::hash(legacy_wire.as_bytes()).to_hex().to_string();
+        assert_eq!(ds_engine::jobs::config_digest(&config).unwrap(), digest);
+        let reloaded = AppConfig::from_toml(&config.to_toml().unwrap()).unwrap();
+        assert_eq!(ds_engine::jobs::config_digest(&reloaded).unwrap(), digest);
+    }
+}
+
 fn fixture() -> (Task, TaskStore) {
     let base = std::env::temp_dir().join(format!("ds-checkpoint-test-{}", uuid::Uuid::new_v4()));
     std::fs::create_dir_all(base.join("files")).unwrap();

@@ -4,6 +4,54 @@ use std::time::{Duration, Instant};
 use support::*;
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn rename_keeps_unchanged_names_extensions_and_denied_files() {
+    let s = Server::new("media-fixture").await;
+    let root = s.root("rename-boundaries");
+    write(&root, "report.pdf", "synthetic document");
+    write(&root, "private.xlsx", "denied contents");
+    let before = hashes(&root);
+    let mut task = s
+        .tree(
+            &root,
+            "rename",
+            json!({"default":"filename_only",
+        "rules":[{"extensions":["xlsx"],"tier":"none"}],"content_slice_bytes":16}),
+        )
+        .await;
+    task = s
+        .post(
+            "rename_scope",
+            &task,
+            json!({"extensions":["pdf","xlsx"],"web_search":false}),
+        )
+        .await;
+    task = s.step(&task).await;
+    task = s.run("rename", &task, json!({})).await;
+    assert!(
+        array(&task["operations"]).is_empty(),
+        "unchanged names must not generate moves"
+    );
+    assert_eq!(array(&task["calls"]).len(), 1);
+    assert!(!serde_json::to_string(&s.mock.bodies())
+        .unwrap()
+        .contains("private.xlsx"));
+    assert!(!serde_json::to_string(&s.mock.bodies())
+        .unwrap()
+        .contains("denied contents"));
+    s.configure(json!({"model":"local-test"})).await;
+    task = s.post("back", &task, json!({"phase":3})).await;
+    task = s.run("rename", &task, json!({})).await;
+    assert_eq!(array(&task["operations"]).len(), 1);
+    assert_eq!(task["operations"][0]["source"], "report.pdf");
+    assert_eq!(task["operations"][0]["destination"], "可读_report.pdf");
+    assert_eq!(hashes(&root), before, "proposals never move files");
+    task = s.approve(&task).await;
+    task = s.run("execute", &task, json!({})).await;
+    s.run("rollback", &task, json!({})).await;
+    assert_eq!(hashes(&root), before);
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn http_workflow_security_search_rollback_and_billing() {
     let s = Server::new("local-test").await;
     let root = s.root("Downloads");

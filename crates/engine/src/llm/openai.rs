@@ -1,7 +1,6 @@
 //! Chat Completions、Responses 与 Anthropic Messages 客户端实现。
 //!
-//! 非流式：骨架阶段先保证“能跑通一轮工具调用”。流式（SSE）进度渲染
-//! 留作后续扩展点——届时把 `chat` 改为返回事件流即可，trait 不变。
+//! 模型回答完整接收后校验并计费；Web 的 SSE 由任务层持续推送进度。
 
 use super::providers::{self, ApiFormat};
 use async_trait::async_trait;
@@ -34,10 +33,6 @@ pub struct OpenAiClient {
 }
 
 impl OpenAiClient {
-    pub fn new(endpoint: String, api_key: String) -> Result<Self> {
-        Self::with_timeout(endpoint, api_key, 600)
-    }
-
     pub fn with_timeout(endpoint: String, api_key: String, timeout_seconds: u64) -> Result<Self> {
         anyhow::ensure!(
             (1..=3600).contains(&timeout_seconds),
@@ -414,7 +409,7 @@ mod tests {
 
     #[test]
     fn multimodal_content_becomes_array() {
-        let client = OpenAiClient::new("http://x".into(), "k".into()).unwrap();
+        let client = OpenAiClient::with_timeout("http://x".into(), "k".into(), 600).unwrap();
         let body = client.build_body(
             &[msg_with_img()],
             &[],
@@ -438,7 +433,7 @@ mod tests {
 
     #[test]
     fn plain_message_stays_string() {
-        let client = OpenAiClient::new("http://x".into(), "k".into()).unwrap();
+        let client = OpenAiClient::with_timeout("http://x".into(), "k".into(), 600).unwrap();
         let body = client.build_body(
             &[Message::user("hello")],
             &[],
@@ -459,7 +454,7 @@ mod tests {
                 "tool_calls":[{"id":"call_1","function":{"name":"read_file_evidence","arguments":"{\"file_ids\":[\"f1\"]}"}}]}}],
             "usage":{"prompt_tokens":80,"completion_tokens":20}
         })).unwrap();
-        let client = OpenAiClient::new("http://fixture".into(), String::new()).unwrap();
+        let client = OpenAiClient::with_timeout("http://fixture".into(), String::new(), 600).unwrap();
         let body = client.build_body(
             &[
                 response.message,
@@ -508,7 +503,7 @@ mod tests {
             "https://api.openai.com/v1/chat/completions"
         );
         // 客户端内部存的是归一化后的
-        let c = OpenAiClient::new("http://localhost:11434/v1".into(), "k".into()).unwrap();
+        let c = OpenAiClient::with_timeout("http://localhost:11434/v1".into(), "k".into(), 600).unwrap();
         assert_eq!(c.endpoint, "http://localhost:11434/v1/chat/completions");
     }
 }

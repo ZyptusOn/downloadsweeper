@@ -24,15 +24,12 @@ mod tree_proposal;
 mod review;
 pub(crate) use review::revise_plan;
 pub use review::apply_review_proposal;
-pub use classification::{classification_readiness, refine, refine_with_options, refine_with_parallel_progress, RefineOptions};
+pub use classification::{classification_readiness, refine_with_options, refine_with_parallel_progress, RefineOptions};
 pub use inspection::suggest_tree;
 pub use rename_job::rename;
 
 /// Never send absolute paths or file IDs to a model; opaque indexes map responses back locally.
-pub fn file_context(task: &Task, entry: &Entry) -> Result<Option<Value>> {
-    file_context_capped(task, entry, 65536)
-}
-fn file_context_capped(task: &Task, entry: &Entry, cap: usize) -> Result<Option<Value>> {
+pub fn file_context_capped(task: &Task, entry: &Entry, cap: usize) -> Result<Option<Value>> {
     let Some(mut value) = file_descriptor(task, entry)? else {
         return Ok(None);
     };

@@ -36,25 +36,25 @@ fn office_samples_are_bounded_read_only_and_permission_scoped() {
     .unwrap();
     task.scan(&CancellationToken::new(), &|_, _, _| {}).unwrap();
     let entry = task.entries[0].clone();
-    assert!(workflow_ai::file_context(&task, &entry).unwrap().is_none());
+    assert!(workflow_ai::file_context_capped(&task, &entry, 65536).unwrap().is_none());
     for tier in [
         AccessTier::FilenameOnly,
         AccessTier::Metadata,
         AccessTier::Image,
     ] {
         task.permissions.default = tier;
-        let context = workflow_ai::file_context(&task, &entry).unwrap().unwrap();
+        let context = workflow_ai::file_context_capped(&task, &entry, 65536).unwrap().unwrap();
         assert!(context.get("text_excerpt").is_none());
     }
     task.permissions.default = AccessTier::ContentSlice;
-    let context = workflow_ai::file_context(&task, &entry).unwrap().unwrap();
+    let context = workflow_ai::file_context_capped(&task, &entry, 65536).unwrap().unwrap();
     let text = context["text_excerpt"].as_str().unwrap();
     assert!(text.contains("项目预算") && text.len() <= 14);
     assert_eq!(context["content_preview"]["truncated"], true);
     assert!(!context.to_string().contains("DO_NOT_"));
     assert_eq!(std::fs::read(&path).unwrap(), before);
     task.permissions.content_slice_bytes = 0;
-    assert!(workflow_ai::file_context(&task, &entry)
+    assert!(workflow_ai::file_context_capped(&task, &entry, 65536)
         .unwrap()
         .unwrap()
         .get("text_excerpt")

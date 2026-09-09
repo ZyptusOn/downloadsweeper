@@ -384,11 +384,7 @@ fn verify_snapshot(task: &Task, source: &str, manifest: Option<&str>, cancel: &C
     Ok(())
 }
 
-pub fn validate_operations(task: &Task) -> Result<()> {
-    validate_operations_with_cancel(task, &CancellationToken::new(), &|_, _, _| {})
-}
-
-fn validate_operations_with_cancel(
+pub fn validate_operations_with_cancel(
     task: &Task,
     cancel: &CancellationToken,
     progress: &Progress<'_>,

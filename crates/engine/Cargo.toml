@@ -4,10 +4,6 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 
-[features]
-default = []
-legacy-agent = []
-
 [dependencies]
 tokio = { workspace = true }
 tokio-util = { workspace = true }
@@ -20,7 +16,6 @@ sha2 = { workspace = true }
 blake3 = "1.8.7"
 walkdir = { workspace = true }
 reqwest = { workspace = true }
-tracing = { workspace = true }
 chrono = { workspace = true }
 async-trait = { workspace = true }
 futures = { workspace = true }
@@ -30,6 +25,7 @@ image = { version = "0.25", default-features = false, features = ["png", "jpeg"]
 dirs = "6"
 dotenvy = "0.15"
 zip = { version = "8.6", default-features = false, features = ["deflate-flate2"] }
+# Select ZIP's pure Rust DEFLATE backend; required even without direct flate2 calls.
 flate2 = { version = "1", default-features = false, features = ["rust_backend"] }
 quick-xml = "0.41"
 

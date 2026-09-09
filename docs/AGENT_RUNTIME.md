@@ -24,7 +24,7 @@ Web 长任务的运行记录、暂停请求和恢复入口已持久化；归档�
 
 文本与图像证据通过验证后的文件句柄读取，读取前后检查快照；Windows 读句柄限制并发写入和删除，并验证实际打开的路径仍在根目录内。图像解码还有尺寸和内存上限。Windows 视频优先使用系统原生解码，独立子进程整体限 8 秒；FFmpeg 为可选后备。两个后端都在父进程保留只读句柄期间运行，受输出上限、取消与超时控制。系统解码器及路径接口不能视为对恶意并发文件系统修改的完整沙箱。
 
-旧 `Agent` 仅在显式启用 Cargo `legacy-agent` 特性时编译。默认旧工具注册表不含移动或删除工具；直接调用旧整理工具的真实写入也被拒绝。生产文件修改只能通过经过审查的安全执行流程，使用无覆盖移动、指纹、预写记录和恢复。
+旧 Agent、独立分类/命名管线、工具注册表和旧计划系统已移除。GUI、CLI 与 Tauri 统一使用 `workflow`、`workflow_ai` 和 `ai_runtime`。生产文件修改只能通过经过审查的安全执行流程，使用无覆盖移动、指纹、预写记录和恢复。
 
 ## 验证与性能范围
 
@@ -34,7 +34,6 @@ Web 长任务的运行记录、暂停请求和恢复入口已持久化；归档�
 
 ```powershell
 cargo test --workspace --exclude ds-tauri --locked
-cargo check -p ds-engine --features legacy-agent --locked
 cargo build -p ds-web --locked
 cargo test --locked -p ds-web --test runtime
 cargo test --locked -p ds-web --tests

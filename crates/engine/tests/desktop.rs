@@ -103,7 +103,7 @@ fn desktop_cancel_does_not_commit_partial_plan_and_tampered_folder_moves_fail() 
     let op = &mut f.task.operations[0];
     op.source = "项目".into();
     op.kind = "directory".into();
-    assert!(safe_fs::validate_operations(&f.task).is_err());
+    assert!(safe_fs::validate_operations_with_cancel(&f.task, &CancellationToken::new(), &|_, _, _| {}).is_err());
 }
 
 #[test]
@@ -163,7 +163,7 @@ async fn desktop_ai_readiness_and_empty_run_preserve_the_rule_plan() {
     let report = workflow_ai::classification_readiness(&f.task);
     assert_eq!(report.eligible_files, 0);
     assert_eq!(report.no_semantic_rule, 4);
-    let error = workflow_ai::refine(&mut f.task, &AppConfig::default(), &f.store, &c, &p)
+    let error = workflow_ai::refine_with_options(&mut f.task, &AppConfig::default(), &f.store, workflow_ai::RefineOptions::default(), &c, &p)
         .await.unwrap_err();
     assert!(error.to_string().contains("未调用 AI"));
     assert_eq!(serde_json::to_value(&f.task).unwrap(), before);

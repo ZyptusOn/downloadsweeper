@@ -187,8 +187,6 @@ async fn handle(State(state): State<Arc<Mutex<StateData>>>, request: Request) ->
                 pause(4000).await;
             }
             json!({"summary":format!("本地测试：{}已检查 {} 个文件，可按工作用途和学习用途进一步区分。",text(&ctx["type_name"]),ctx["already_inspected"].as_u64().unwrap()+array(&ctx["files"]).len() as u64)})
-        } else if system.contains("将文件分到给定候选类别") {
-            json!({"node_id":ctx["categories"][0]["id"],"reason":"本地测试模型"})
         } else if system.contains("依据现有信息提出清晰简洁文件名") {
             let fail = {
                 let mut s = state.lock().unwrap();
@@ -205,8 +203,7 @@ async fn handle(State(state): State<Arc<Mutex<StateData>>>, request: Request) ->
             } else {
                 json!({"name":format!("可读_{}",text(&ctx["name"])),"reason":"本地测试模型命名建议"})
             }
-        } else if system.contains("复核清理候选") || system.contains("对大文件和临时小文件")
-        {
+        } else if system.contains("复核清理候选") {
             json!({"suggestions":array(&ctx).iter().map(|c|json!({"index":c["index"],"reason":"请确认用途与备份后再自行决定是否清理。"})).collect::<Vec<_>>()})
         } else {
             let ctx = messages
