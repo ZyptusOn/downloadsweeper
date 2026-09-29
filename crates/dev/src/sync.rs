@@ -46,12 +46,13 @@ pub fn safe_path(root: &Path, name: &str) -> Result<PathBuf> {
 }
 fn absolute(path: &Path) -> Result<PathBuf> {
     let p = std::path::absolute(path)?;
-    for a in p.ancestors() {
-        ensure!(
-            !linked(a),
-            "Workspace roots must not use links or reparse points"
-        );
-    }
+    // 只拒绝工作区根路径本身是链接：macOS 临时目录位于 /var/folders，
+    // 其中的 /var -> /private/var 属于系统前缀符号链接，不应误拒。
+    // 根目录内部的链接由 safe_path 在逐文件操作时兜底检查。
+    ensure!(
+        !linked(&p),
+        "Workspace roots must not use links or reparse points"
+    );
     let mut normalized = PathBuf::new();
     for c in p.components() {
         match c {

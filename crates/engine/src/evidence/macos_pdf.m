@@ -37,7 +37,7 @@ static NSData *DSPagePacket(CGContextRef context,NSArray *sampled,size_t count,N
         @"image":@{@"mime":@"image/jpeg",@"data_base64":[encoded base64EncodedStringWithOptions:0],@"high_detail":@YES},
         @"info":@{@"status":@"sampled",@"kind":@"pdf_page_samples",@"backend":@"coregraphics_pdf",
             @"page_count":@(count),@"sampled_pages":[sampled copy],@"layout":@"left_to_right",@"page_max_px":@[@512,@768],
-            @"partial":@(sampled.count<requested),@"full_document":@NO,
+            @"partial":@((BOOL)(sampled.count<requested)),@"full_document":@NO,
             @"message":@"从左到右对应 sampled_pages 中的页码；只预览首页、第二页和中间页，不代表全文。不执行脚本、附件或 OCR。"}}
         options:0 error:NULL];
 }

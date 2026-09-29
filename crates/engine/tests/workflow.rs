@@ -492,14 +492,13 @@ fn startup_recovers_legacy_move_and_restore_intents() {
 fn paths_and_atomic_descendants_cannot_be_injected() {
     let (mut task, _) = fixture();
     planned(&mut task);
-    for bad in [
-        "../outside",
-        "/absolute",
-        "C:/outside",
-        "a/../x",
-        "a\\b",
-        "CON",
-    ] {
+    // Windows 专属的盘符、反斜杠分隔与保留设备名在 Unix 上是合法文件名，
+    // safe_relative 按平台校验，这里同样按平台断言。
+    let mut bad = vec!["../outside", "/absolute", "a/../x"];
+    if cfg!(windows) {
+        bad.extend(["C:/outside", "a\\b", "CON"]);
+    }
+    for bad in bad {
         assert!(safe_fs::checked_path(&task.root, bad).is_err());
     }
     task.operations[0].source = "Portable/editor.exe".into();

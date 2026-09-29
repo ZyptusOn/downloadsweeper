@@ -174,7 +174,7 @@ static NSData *DSGenerate(int descriptor) {
     NSDictionary *visual = @{@"image": @{@"mime": @"image/jpeg", @"data_base64": [jpeg base64EncodedStringWithOptions:0]},
         @"info": @{@"status": @"sampled", @"kind": @"video_contact_sheet", @"backend": @"avfoundation",
             @"sample_targets_seconds": sampled, @"actual_times_seconds": actualTimes,
-            @"duration_seconds": @(duration), @"layout": @"row_major_2x2", @"partial": @(partial || sampled.count < times.count),
+            @"duration_seconds": @(duration), @"layout": @"row_major_2x2", @"partial": @((BOOL)(partial || sampled.count < times.count)),
             @"message": @"系统原生采样；左上、右上、左下为开头及中段附近帧。定位允许误差，空白格不是帧；无音频，不代表完整视频。"}};
     return [NSJSONSerialization dataWithJSONObject:visual options:0 error:NULL];
 }
