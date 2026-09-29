@@ -1,0 +1,24 @@
+[package]
+name = "ds-demo"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+ds-engine = { path = "../engine" }
+ds-web = { path = "../web" }
+anyhow.workspace = true
+tokio.workspace = true
+serde_json.workspace = true
+uuid.workspace = true
+reqwest.workspace = true
+futures.workspace = true
+tokio-util.workspace = true
+walkdir.workspace = true
+axum = "0.8"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+zip = { version = "8.6", default-features = false, features = ["deflate-flate2"] }
+
+[dev-dependencies]
+tempfile = "3"
